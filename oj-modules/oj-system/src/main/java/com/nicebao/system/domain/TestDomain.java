@@ -1,5 +1,7 @@
 package com.nicebao.system.domain;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -13,7 +15,8 @@ import lombok.Data;
 @TableName("tb_test")
 @Data
 public class TestDomain {
-	private Integer testId;
+	@TableId(type = IdType.ASSIGN_ID)
+	private String testId;
 	private String title;
 	private String content;
 }

@@ -17,6 +17,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>oj-modules</module>
+        <module>oj-common</module>
     </modules>
 
     <properties>
@@ -26,6 +27,7 @@
         <spring-cloud-alibaba.version>2022.0.0.0-RC2</spring-cloud-alibaba.version>
         <spring-cloud.version>2022.0.0</spring-cloud.version>
         <mybatis-plus.version>3.5.5</mybatis-plus.version>
+        <oj-common-core.version>1.0-SNAPSHOT</oj-common-core.version>
     </properties>
 
     <dependencies>
@@ -33,6 +35,17 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bootstrap</artifactId>
+        </dependency>
+        <!-- lombook -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <!-- 引入公共模块 -->
+        <dependency>
+            <groupId>com.nicebao</groupId>
+            <artifactId>oj-common-core</artifactId>
+            <version>${oj-common-core.version}</version>
         </dependency>
     </dependencies>
 
@@ -65,11 +78,6 @@
                 <scope>import</scope>
             </dependency>
 
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <scope>provided</scope>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

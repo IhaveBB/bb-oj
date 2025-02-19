@@ -1,4 +1,4 @@
-package com.nicebao.system.Service;
+package com.nicebao.system.Service.test;
 
 import com.nicebao.system.domain.TestDomain;
 
@@ -13,4 +13,6 @@ import java.util.List;
  */
 public interface TestService {
 	List<TestDomain> list();
+
+	String add();
 }
