@@ -1,6 +1,9 @@
 spring:
   application:
     name: oj-gateway
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
   profiles:
     active: local
   cloud:
@@ -12,3 +15,5 @@ spring:
         namespace: 1d6798c4-1881-473d-9ce4-c1050d3d45b4
         server-addr: http://localhost:8848
         file-extension: yaml
+
+

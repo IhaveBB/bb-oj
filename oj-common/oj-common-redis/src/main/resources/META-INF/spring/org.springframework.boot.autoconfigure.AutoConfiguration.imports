@@ -1,0 +1,2 @@
+com.nicebao.common.redis.config.RedisConfig
+com.nicebao.common.redis.service.RedisService
