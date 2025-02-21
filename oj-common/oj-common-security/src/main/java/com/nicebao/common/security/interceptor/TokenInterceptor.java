@@ -8,6 +8,7 @@ import com.nicebao.common.security.service.TokenService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
  * @date 2025/2/20
  */
 @Component
+@Slf4j
 public class TokenInterceptor implements HandlerInterceptor {
 	@Autowired
 	private TokenService tokenService;
@@ -41,8 +43,10 @@ public class TokenInterceptor implements HandlerInterceptor {
 		String userKey = tokenService.getUserKey(claims);
 		ThreadLocalUtil.set(Constants.USER_ID, userId);
 		ThreadLocalUtil.set(Constants.USER_KEY, userKey);
+		log.info("用户ID:{}", userId);
 
 		tokenService.extendToken(claims);
+		log.info("令牌有效期已延长:");
 		return true;
 	}
 

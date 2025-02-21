@@ -67,5 +67,13 @@ public class SysUserServiceImpl implements SysUserService {
 		sysUser.setCreateBy(Constants.SYSTEM_USER_ID);
 		return sysUserMapper.insert(sysUser);
 	}
+
+	public static void main(String[] args) {
+		SysUser sysUser = new SysUser();
+		sysUser.setUserAccount("IhaveBB");
+		sysUser.setPassword(BCryptUtils.encryptPassword("www.92921801"));
+		sysUser.setCreateBy(Constants.SYSTEM_USER_ID);
+		System.out.println(sysUser.toString());
+	}
 }
 

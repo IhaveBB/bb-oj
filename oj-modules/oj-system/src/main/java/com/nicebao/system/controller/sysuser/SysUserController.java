@@ -8,6 +8,7 @@ import com.nicebao.system.domain.sysuser.dto.SysUserSaveDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/sysUser")
+@Slf4j
 @Tag(name = "管理员接口")
 public class SysUserController extends BaseController {
 
@@ -34,6 +36,7 @@ public class SysUserController extends BaseController {
 	@ApiResponse(responseCode = "3102", description = "用户不存在")
 	@ApiResponse(responseCode = "3103", description = "用户名或密码错误")
 	public R<String> login(@RequestBody LoginDTO loginDTO) {
+		log.info("管理员登录:获取到账号ID{}",loginDTO.getUserAccount());
 		return sysUserService.login(loginDTO.getUserAccount(), loginDTO.getPassword());
 	}
 

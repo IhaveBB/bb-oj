@@ -14,7 +14,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
  * @date 2025/2/18
  */
 @SpringBootApplication
-public class OjGatewayApplication {
+public class  OjGatewayApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(OjGatewayApplication.class, args);
 	}

@@ -1,6 +1,10 @@
 package com.nicebao.common.core.domain;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -12,17 +16,19 @@ import java.time.LocalDateTime;
  * @author IhaveBB
  * @date 2025/2/19
  */
-@Data
-public class BaseEntity implements Serializable {
-	// 创建用户
+@Getter
+@Setter
+public class BaseEntity {
+
+	@TableField(fill = FieldFill.INSERT)
 	private Long createBy;
 
-	// 创建时间
+	@TableField(fill = FieldFill.INSERT)
 	private LocalDateTime createTime;
 
-	// 更新用户
+	@TableField(fill = FieldFill.UPDATE)
 	private Long updateBy;
 
-	// 更新时间
+	@TableField(fill = FieldFill.UPDATE)
 	private LocalDateTime updateTime;
 }
