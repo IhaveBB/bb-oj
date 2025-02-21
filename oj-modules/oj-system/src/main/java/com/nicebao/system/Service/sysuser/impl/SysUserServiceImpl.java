@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.nicebao.common.core.domain.R;
 import com.nicebao.common.core.enums.ResultCode;
 import com.nicebao.common.core.enums.UserIdentity;
-import com.nicebao.common.security.service.TokenService;
+import com.nicebao.common.security.service.service.TokenService;
 import com.nicebao.system.Service.sysuser.SysUserService;
 import com.nicebao.system.domain.SysUser;
 import com.nicebao.system.mapper.sysuser.SysUserMapper;

@@ -1,14 +1,10 @@
-package com.nicebao.system.controller;
+package com.nicebao.system.controller.sysuser;
 
 import com.nicebao.common.core.controller.BaseController;
 import com.nicebao.common.core.domain.R;
-import com.nicebao.common.core.domain.vo.LoginUserVO;
 import com.nicebao.system.Service.sysuser.SysUserService;
 import com.nicebao.system.domain.sysuser.dto.LoginDTO;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
