@@ -1,6 +1,7 @@
 package com.nicebao.system.Service.sysuser;
 
 import com.nicebao.common.core.domain.R;
+import com.nicebao.system.domain.sysuser.dto.SysUserSaveDTO;
 
 /**
  * SysUserService
@@ -12,4 +13,5 @@ import com.nicebao.common.core.domain.R;
 public interface SysUserService {
 	R<String> login(String userAccount, String password);
 
+	int add(SysUserSaveDTO sysUserSaveDTO);
 }

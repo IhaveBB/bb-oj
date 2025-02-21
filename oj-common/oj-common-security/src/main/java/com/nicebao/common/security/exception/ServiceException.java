@@ -1,4 +1,4 @@
-package com.nicebao.common.security.service.exception;
+package com.nicebao.common.security.exception;
 
 import com.nicebao.common.core.enums.ResultCode;
 import lombok.Getter;

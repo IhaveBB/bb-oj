@@ -1,10 +1,10 @@
-package com.nicebao.common.security.service.interceptor;
+package com.nicebao.common.security.interceptor;
 
 import cn.hutool.core.util.StrUtil;
 import com.nicebao.common.core.constants.Constants;
 import com.nicebao.common.core.constants.HttpConstants;
 import com.nicebao.common.core.utils.ThreadLocalUtil;
-import com.nicebao.common.security.service.service.TokenService;
+import com.nicebao.common.security.service.TokenService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

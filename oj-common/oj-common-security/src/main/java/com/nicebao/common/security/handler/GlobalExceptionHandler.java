@@ -1,20 +1,13 @@
-package com.nicebao.common.security.service.handler;
+package com.nicebao.common.security.handler;
 
 import com.nicebao.common.core.domain.R;
 import com.nicebao.common.core.enums.ResultCode;
-import com.nicebao.common.security.service.exception.ServiceException;
+import com.nicebao.common.security.exception.ServiceException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.util.Collection;
-import java.util.Objects;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * GlobalExceptionHander

@@ -1,6 +1,6 @@
-package com.nicebao.common.security.service.config;
+package com.nicebao.common.security.config;
 
-import com.nicebao.common.security.service.interceptor.TokenInterceptor;
+import com.nicebao.common.security.interceptor.TokenInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

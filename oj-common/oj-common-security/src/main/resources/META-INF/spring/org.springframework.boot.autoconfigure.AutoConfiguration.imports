@@ -1,4 +1,4 @@
 com.nicebao.common.security.handler.GlobalExceptionHandler
-com.nicebao.common.security.service.service.TokenService
+com.nicebao.common.security.service.TokenService
 com.nicebao.common.security.config.WebMvcConfig
 com.nicebao.common.security.interceptor.TokenInterceptor

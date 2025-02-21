@@ -1,17 +1,23 @@
 package com.nicebao.system.Service.sysuser.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.nicebao.common.core.constants.Constants;
 import com.nicebao.common.core.domain.R;
 import com.nicebao.common.core.enums.ResultCode;
 import com.nicebao.common.core.enums.UserIdentity;
-import com.nicebao.common.security.service.service.TokenService;
+import com.nicebao.common.security.exception.ServiceException;
+import com.nicebao.common.security.service.TokenService;
 import com.nicebao.system.Service.sysuser.SysUserService;
 import com.nicebao.system.domain.SysUser;
+import com.nicebao.system.domain.sysuser.dto.SysUserSaveDTO;
 import com.nicebao.system.mapper.sysuser.SysUserMapper;
 import com.nicebao.system.utils.BCryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * SysUserServiceImpl
@@ -45,6 +51,21 @@ public class SysUserServiceImpl implements SysUserService {
 					secret, UserIdentity.ADMIN.getValue(), sysUser.getNickName(), null));
 		}
 		return R.fail(ResultCode.FAILED_LOGIN);
+	}
+
+	@Override
+	public int add(SysUserSaveDTO sysUserSaveDTO) {
+		List<SysUser> sysUserList = sysUserMapper.selectList(new LambdaQueryWrapper<SysUser>()
+				.eq(SysUser::getUserAccount, sysUserSaveDTO.getUserAccount()));
+		//用户信息已存在不可以重复注册
+		if (CollectionUtil.isNotEmpty(sysUserList)) {
+			throw new ServiceException(ResultCode.AILED_USER_EXISTS);
+		}
+		SysUser sysUser = new SysUser();
+		sysUser.setUserAccount(sysUserSaveDTO.getUserAccount());
+		sysUser.setPassword(BCryptUtils.encryptPassword(sysUserSaveDTO.getPassword()));
+		sysUser.setCreateBy(Constants.SYSTEM_USER_ID);
+		return sysUserMapper.insert(sysUser);
 	}
 }
 

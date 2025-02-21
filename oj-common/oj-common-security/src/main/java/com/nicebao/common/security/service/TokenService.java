@@ -1,4 +1,4 @@
-package com.nicebao.common.security.service.service;
+package com.nicebao.common.security.service;
 
 import cn.hutool.core.lang.UUID;
 import com.nicebao.common.core.constants.CacheConstants;
