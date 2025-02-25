@@ -1,7 +1,9 @@
 package com.nicebao.system.controller.sysuser;
 
+import com.nicebao.common.core.constants.HttpConstants;
 import com.nicebao.common.core.controller.BaseController;
 import com.nicebao.common.core.domain.R;
+import com.nicebao.common.core.domain.vo.LoginUserVO;
 import com.nicebao.system.Service.sysuser.SysUserService;
 import com.nicebao.system.domain.sysuser.dto.LoginDTO;
 import com.nicebao.system.domain.sysuser.dto.SysUserSaveDTO;
@@ -39,6 +41,27 @@ public class SysUserController extends BaseController {
 		log.info("管理员登录:获取到账号ID{}",loginDTO.getUserAccount());
 		return sysUserService.login(loginDTO.getUserAccount(), loginDTO.getPassword());
 	}
+
+	/**
+	 * 注销
+	 * @author IhavBB
+	 * @date 23:36 2025/2/21
+	 * @param token
+	 * @return {@link R< Void>}
+	**/
+	@DeleteMapping("/logout")
+	public R<Void> logout(@RequestHeader(HttpConstants.AUTHENTICATION) String token) {
+		return toR(sysUserService.logout(token));
+	}
+
+
+	@GetMapping("/info")
+	public R<LoginUserVO> info(@RequestHeader(HttpConstants.AUTHENTICATION) String token) {
+		return sysUserService.info(token);
+	}
+
+
+
 
 	@PostMapping("/add")
 	@Operation(summary = "新增管理员", description = "根据提供的信息新增管理员")

@@ -178,4 +178,19 @@ public class TokenService {
 		return JwtUtils.getUserKey(claims);
 	}
 
+	/**
+	 * 从redis中删除令牌
+	 * @author IhavBB
+	 * @date 23:39 2025/2/21
+	 * @param token
+	 * @param secret
+	 * @return {@link boolean}
+	**/
+	public boolean deleteLoginUser(String token, String secret) {
+		String userKey = getUserKey(token, secret);
+		if (userKey == null) {
+			return false;
+		}
+		return redisService.deleteObject(getTokenKey(userKey));
+	}
 }

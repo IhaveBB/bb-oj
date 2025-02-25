@@ -1,7 +1,7 @@
 package com.nicebao.system.mapper.sysuser;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.nicebao.system.domain.SysUser;
+import com.nicebao.system.domain.sysuser.SysUser;
 
 /**
  * SysUserMapper

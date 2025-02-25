@@ -1,15 +1,19 @@
 package com.nicebao.system.Service.sysuser.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.nicebao.common.core.constants.Constants;
+import com.nicebao.common.core.constants.HttpConstants;
+import com.nicebao.common.core.domain.LoginUser;
 import com.nicebao.common.core.domain.R;
+import com.nicebao.common.core.domain.vo.LoginUserVO;
 import com.nicebao.common.core.enums.ResultCode;
 import com.nicebao.common.core.enums.UserIdentity;
 import com.nicebao.common.security.exception.ServiceException;
 import com.nicebao.common.security.service.TokenService;
 import com.nicebao.system.Service.sysuser.SysUserService;
-import com.nicebao.system.domain.SysUser;
+import com.nicebao.system.domain.sysuser.SysUser;
 import com.nicebao.system.domain.sysuser.dto.SysUserSaveDTO;
 import com.nicebao.system.mapper.sysuser.SysUserMapper;
 import com.nicebao.system.utils.BCryptUtils;
@@ -68,12 +72,28 @@ public class SysUserServiceImpl implements SysUserService {
 		return sysUserMapper.insert(sysUser);
 	}
 
-	public static void main(String[] args) {
-		SysUser sysUser = new SysUser();
-		sysUser.setUserAccount("IhaveBB");
-		sysUser.setPassword(BCryptUtils.encryptPassword("www.92921801"));
-		sysUser.setCreateBy(Constants.SYSTEM_USER_ID);
-		System.out.println(sysUser.toString());
+	@Override
+	public boolean logout(String token) {
+		if (StrUtil.isNotEmpty(token) && token.startsWith(HttpConstants.PREFIX)) {
+			token = token.replaceFirst(HttpConstants.PREFIX, StrUtil.EMPTY);
+		}
+		return tokenService.deleteLoginUser(token, secret);
 	}
+
+	@Override
+	public R<LoginUserVO> info(String token) {
+		if (StrUtil.isNotEmpty(token) && token.startsWith(HttpConstants.PREFIX)) {
+			token = token.replaceFirst(HttpConstants.PREFIX, StrUtil.EMPTY);
+		}
+		LoginUser loginUser = tokenService.getLoginUser(token, secret);
+		if (loginUser == null) {
+			return R.fail();
+		}
+		LoginUserVO loginUserVO = new LoginUserVO();
+		loginUserVO.setNickName(loginUser.getNickName());
+		return R.ok(loginUserVO);
+	}
+
+
 }
 

@@ -99,9 +99,11 @@ public class AuthFilter implements GlobalFilter, Ordered {
         //判断当前请求 请求的是C端功能（只有C端用户可以请求）  还是B端功能  （只有管路员可以请求）
         LoginUser user = redisService.getCacheObject(getTokenKey(userKey), LoginUser.class);
         if (url.contains(HttpConstants.SYSTEM_URL_PREFIX) && !UserIdentity.ADMIN.getValue().equals(user.getIdentity())) {
+            log.info("非管理员用户访问B端接口");
             return unauthorizedResponse(exchange, "令牌验证失败");
         }
         if (url.contains(HttpConstants.FRIEND_URL_PREFIX) && !UserIdentity.ORDINARY.getValue().equals(user.getIdentity())) {
+            log.info("非普通用户访问C端接口");
             return unauthorizedResponse(exchange, "令牌验证失败");
         }
 
