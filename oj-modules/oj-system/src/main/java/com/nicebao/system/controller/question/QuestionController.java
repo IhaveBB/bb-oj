@@ -1,14 +1,14 @@
 package com.nicebao.system.controller.question;
 
 import com.nicebao.common.core.controller.BaseController;
+import com.nicebao.common.core.domain.R;
 import com.nicebao.common.core.domain.TableDataInfo;
 import com.nicebao.system.Service.question.IQuestionService;
+import com.nicebao.system.domain.question.dto.QuestionAddDTO;
 import com.nicebao.system.domain.question.dto.QuestionQueryDTO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * QuestionController
@@ -28,6 +28,11 @@ public class QuestionController extends BaseController {
 	@GetMapping("/list")
 	public TableDataInfo list(QuestionQueryDTO questionQueryDTO) {
 		return getTableDataInfo(questionService.list(questionQueryDTO));
+	}
+
+	@PostMapping("/add")
+	public R<Void> add(@RequestBody QuestionAddDTO questionAddDTO) {
+		return toR(questionService.add(questionAddDTO));
 	}
 
 }

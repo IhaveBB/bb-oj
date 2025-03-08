@@ -7,8 +7,8 @@ spring:
     nacos:
       discovery:
         namespace: 1d6798c4-1881-473d-9ce4-c1050d3d45b4
-        server-addr: http://localhost:8848
+        server-addr: http://10.0.0.1:8848
       config:
         namespace: 1d6798c4-1881-473d-9ce4-c1050d3d45b4
-        server-addr: http://localhost:8848
+        server-addr: http://10.0.0.1:8848
         file-extension: yaml

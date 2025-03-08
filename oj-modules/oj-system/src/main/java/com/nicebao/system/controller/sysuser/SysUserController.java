@@ -5,8 +5,10 @@ import com.nicebao.common.core.controller.BaseController;
 import com.nicebao.common.core.domain.R;
 import com.nicebao.common.core.domain.vo.LoginUserVO;
 import com.nicebao.system.Service.sysuser.SysUserService;
+import com.nicebao.system.Service.sysuser.impl.SysUserServiceImpl;
 import com.nicebao.system.domain.sysuser.dto.LoginDTO;
 import com.nicebao.system.domain.sysuser.dto.SysUserSaveDTO;
+import com.nicebao.system.utils.BCryptUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -60,9 +62,6 @@ public class SysUserController extends BaseController {
 		return sysUserService.info(token);
 	}
 
-
-
-
 	@PostMapping("/add")
 	@Operation(summary = "新增管理员", description = "根据提供的信息新增管理员")
 	@ApiResponse(responseCode = "1000", description = "操作成功")
@@ -71,5 +70,12 @@ public class SysUserController extends BaseController {
 	public R<Void> add(@RequestBody SysUserSaveDTO sysUserSaveDTO) {
 		return toR(sysUserService.add(sysUserSaveDTO));
 	}
+
+
+	public static void main(String[] args) {
+		System.out.println(BCryptUtils.encryptPassword("123456"));
+	}
+
+
 
 }
