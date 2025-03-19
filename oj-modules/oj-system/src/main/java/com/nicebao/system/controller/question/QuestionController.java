@@ -5,7 +5,9 @@ import com.nicebao.common.core.domain.R;
 import com.nicebao.common.core.domain.TableDataInfo;
 import com.nicebao.system.Service.question.IQuestionService;
 import com.nicebao.system.domain.question.dto.QuestionAddDTO;
+import com.nicebao.system.domain.question.dto.QuestionEditDTO;
 import com.nicebao.system.domain.question.dto.QuestionQueryDTO;
+import com.nicebao.system.domain.question.vo.QuestionDetailVO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -35,4 +37,20 @@ public class QuestionController extends BaseController {
 		return toR(questionService.add(questionAddDTO));
 	}
 
+	@GetMapping("/detail")
+	public R<QuestionDetailVO> detail(Long questionId) {
+		return R.ok(questionService.detail(questionId));
+	}
+
+	//  /question/edit
+	@PutMapping("/edit")
+	public R<Void> edit(@RequestBody QuestionEditDTO questionEditDTO) {
+		return toR(questionService.edit(questionEditDTO));
+	}
+
+	//  /question/delete
+	@DeleteMapping("/delete")
+	public R<Void> delete(Long questionId) {
+		return toR(questionService.delete(questionId));
+	}
 }

@@ -11,7 +11,9 @@ import com.nicebao.common.security.exception.ServiceException;
 import com.nicebao.system.Service.question.IQuestionService;
 import com.nicebao.system.domain.question.Question;
 import com.nicebao.system.domain.question.dto.QuestionAddDTO;
+import com.nicebao.system.domain.question.dto.QuestionEditDTO;
 import com.nicebao.system.domain.question.dto.QuestionQueryDTO;
+import com.nicebao.system.domain.question.vo.QuestionDetailVO;
 import com.nicebao.system.domain.question.vo.QuestionVO;
 import com.nicebao.system.mapper.question.QuestionMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -75,7 +77,47 @@ public class IQuestionServiceImpl implements IQuestionService {
 			return false;
 		}
 		//todo 这里回来写ES的逻辑
-
+		//todo 这里回来写缓存逻辑
 		return false;
+	}
+
+	@Override
+	public QuestionDetailVO detail(Long questionId) {
+		Question question = questionMapper.selectById(questionId);
+		if (question == null) {
+			throw new ServiceException(ResultCode.FAILED_NOT_EXISTS);
+		}
+		QuestionDetailVO questionDetailVO = new QuestionDetailVO();
+		BeanUtil.copyProperties(question, questionDetailVO);
+		return questionDetailVO;
+	}
+
+	@Override
+	public int edit(QuestionEditDTO questionEditDTO) {
+		Question oldQuestion = questionMapper.selectById(questionEditDTO.getQuestionId());
+		if (oldQuestion == null) {
+			throw new ServiceException(ResultCode.FAILED_NOT_EXISTS);
+		}
+		oldQuestion.setTitle(questionEditDTO.getTitle());
+		oldQuestion.setDifficulty(questionEditDTO.getDifficulty());
+		oldQuestion.setTimeLimit(questionEditDTO.getTimeLimit());
+		oldQuestion.setSpaceLimit(questionEditDTO.getSpaceLimit());
+		oldQuestion.setContent(questionEditDTO.getContent());
+		oldQuestion.setQuestionCase(questionEditDTO.getQuestionCase());
+		oldQuestion.setDefaultCode(questionEditDTO.getDefaultCode());
+		oldQuestion.setMainFuc(questionEditDTO.getMainFuc());
+		//todo 这里后面实现更新ES的逻辑
+		return questionMapper.updateById(oldQuestion);
+	}
+
+	@Override
+	public int delete(Long questionId) {
+		Question question = questionMapper.selectById(questionId);
+		if (question == null) {
+			throw new ServiceException(ResultCode.FAILED_NOT_EXISTS);
+		}
+		//todo 更新ES
+		//todo 更新缓存
+		return questionMapper.deleteById(questionId);
 	}
 }

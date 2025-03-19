@@ -1,7 +1,9 @@
 package com.nicebao.system.Service.question;
 
 import com.nicebao.system.domain.question.dto.QuestionAddDTO;
+import com.nicebao.system.domain.question.dto.QuestionEditDTO;
 import com.nicebao.system.domain.question.dto.QuestionQueryDTO;
+import com.nicebao.system.domain.question.vo.QuestionDetailVO;
 import com.nicebao.system.domain.question.vo.QuestionVO;
 
 import java.util.List;
@@ -15,7 +17,7 @@ import java.util.List;
  */
 public interface IQuestionService {
 
-	List<QuestionVO> list(QuestionQueryDTO questionQueryDTO);
+	List<QuestionVO>  list(QuestionQueryDTO questionQueryDTO);
 
 	/**
 	 * 添加题目
@@ -26,4 +28,9 @@ public interface IQuestionService {
 	**/
 	boolean add(QuestionAddDTO questionAddDTO);
 
+	QuestionDetailVO detail(Long questionId);
+
+	int edit(QuestionEditDTO questionEditDTO);
+
+	int delete(Long questionId);
 }
