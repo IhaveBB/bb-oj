@@ -6,6 +6,7 @@ import com.nicebao.common.core.domain.TableDataInfo;
 import com.nicebao.system.Service.exam.IExamService;
 import com.nicebao.system.domain.exam.dto.ExamAddDTO;
 import com.nicebao.system.domain.exam.dto.ExamQueryDTO;
+import com.nicebao.system.domain.exam.dto.ExamQuestAddDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,5 +33,17 @@ public class ExamController extends BaseController {
 	public R<String> add(@RequestBody ExamAddDTO examAddDTO) {
 		return R.ok(examService.add(examAddDTO));
 	}
+
+	@PostMapping("/question/add")
+	public R<Void> questionAdd(@RequestBody ExamQuestAddDTO examQuestAddDTO) {
+		return toR(examService.questionAdd(examQuestAddDTO));
+	}
+
+	@DeleteMapping("/question/delete")
+	public R<Void> questionDelete(Long examId, Long questionId) {
+		return toR(examService.questionDelete(examId, questionId));
+	}
+
+
 
 }

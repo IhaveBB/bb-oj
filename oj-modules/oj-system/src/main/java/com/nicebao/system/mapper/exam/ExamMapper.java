@@ -15,7 +15,5 @@ import java.util.List;
  * @date 2025/3/19
  */
 public interface ExamMapper extends BaseMapper<Exam> {
-
 	List<ExamVO> selectExamList(ExamQueryDTO examQueryDTO);
-
 }

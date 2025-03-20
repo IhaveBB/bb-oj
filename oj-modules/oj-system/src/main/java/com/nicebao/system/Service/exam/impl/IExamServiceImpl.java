@@ -4,19 +4,29 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.pagehelper.PageHelper;
+import com.nicebao.common.core.constants.Constants;
 import com.nicebao.common.core.enums.ResultCode;
 import com.nicebao.common.security.exception.ServiceException;
 import com.nicebao.system.Service.exam.IExamService;
 import com.nicebao.system.domain.exam.Exam;
+import com.nicebao.system.domain.exam.ExamQuestion;
 import com.nicebao.system.domain.exam.dto.ExamAddDTO;
 import com.nicebao.system.domain.exam.dto.ExamQueryDTO;
+import com.nicebao.system.domain.exam.dto.ExamQuestAddDTO;
 import com.nicebao.system.domain.exam.vo.ExamVO;
+import com.nicebao.system.domain.question.Question;
 import com.nicebao.system.mapper.exam.ExamMapper;
+import com.nicebao.system.mapper.exam.ExamQuestionMapper;
+import com.nicebao.system.mapper.question.QuestionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
+import static com.baomidou.mybatisplus.extension.toolkit.Db.saveBatch;
 
 /**
  * IExamServiceImpl
@@ -29,6 +39,10 @@ import java.util.List;
 public class IExamServiceImpl implements IExamService {
 	@Autowired
 	private ExamMapper examMapper;
+	@Autowired
+	private QuestionMapper questionMapper;
+	@Autowired
+	private ExamQuestionMapper examQuestionMapper;
 
 	@Override
 	public List<ExamVO> list(ExamQueryDTO examQueryDTO) {
@@ -45,7 +59,85 @@ public class IExamServiceImpl implements IExamService {
 		return exam.getExamId().toString();
 	}
 
+	@Override
+	public boolean questionAdd(ExamQuestAddDTO examQuestAddDTO) {
+		Exam exam = getExam(examQuestAddDTO.getExamId());
+		checkExam(exam);
+		if (Constants.TRUE.equals(exam.getStatus())) {
+			throw new ServiceException(ResultCode.EXAM_IS_PUBLISH);
+		}
+		Set<Long> questionIdSet = examQuestAddDTO.getQuestionIdSet();
+		if (CollectionUtil.isEmpty(questionIdSet)) {
+			//传入空值不添加，直接返回OK
+			return true;
+		}
+		List<Question> questionList = questionMapper.selectBatchIds(questionIdSet);
+		if (CollectionUtil.isEmpty(questionList) || questionList.size() < questionIdSet.size()) {
+			throw new ServiceException(ResultCode.EXAM_QUESTION_NOT_EXISTS);
+		}
+		return saveExamQuestion(exam, questionIdSet);
+	}
 
+	@Override
+	public int questionDelete(Long examId, Long questionId) {
+		Exam exam = getExam(examId);
+		checkExam(exam);
+		if (Constants.TRUE.equals(exam.getStatus())) {
+			throw new ServiceException(ResultCode.EXAM_IS_PUBLISH);
+		}
+		return examQuestionMapper.delete(new LambdaQueryWrapper<ExamQuestion>()
+				.eq(ExamQuestion::getExamId, examId)
+				.eq(ExamQuestion::getQuestionId, questionId));
+	}
+
+	/**
+	 * 保存题目到竞赛
+	 * @author IhavBB
+	 * @date 22:47 2025/3/20
+	 * @param exam
+	 * @param questionIdSet
+	 * @return {@link boolean}
+	**/
+	private boolean saveExamQuestion(Exam exam, Set<Long> questionIdSet) {
+		int num = 1;
+		List<ExamQuestion> examQuestionList = new ArrayList<>();
+		for (Long questionId : questionIdSet) {
+			ExamQuestion examQuestion = new ExamQuestion();
+			examQuestion.setExamId(exam.getExamId());
+			examQuestion.setQuestionId(questionId);
+			examQuestion.setQuestionOrder(num++);
+			examQuestionList.add(examQuestion);
+		}
+		return saveBatch(examQuestionList);
+	}
+
+
+	/**
+	 * 校验竞赛合法性。检测竞赛是否已经开始，已经开始的竞赛不能修改
+	 * @author IhavBB
+	 * @date 22:07 2025/3/20
+	 * @param exam
+	**/
+	private void checkExam(Exam exam) {
+		if (exam.getStartTime().isBefore(LocalDateTime.now())) {
+			throw new ServiceException(ResultCode.EXAM_STARTED);
+		}
+	}
+
+	/**
+	 * 检查竞赛是否存在
+	 * @author IhavBB
+	 * @date 22:07 2025/3/20
+	 * @param examId
+	 * @return {@link Exam}
+	**/
+	private Exam getExam(Long examId) {
+		Exam exam = examMapper.selectById(examId);
+		if (exam == null) {
+			throw new ServiceException(ResultCode.FAILED_NOT_EXISTS);
+		}
+		return exam;
+	}
 
 	private void checkExamSaveParams(ExamAddDTO examSaveDTO, Long examId) {
 		//1、竞赛标题是否重复进行判断   2、竞赛开始、结束时间进行判断
@@ -57,9 +149,11 @@ public class IExamServiceImpl implements IExamService {
 			throw new ServiceException(ResultCode.FAILED_ALREADY_EXISTS);
 		}
 		if (examSaveDTO.getStartTime().isBefore(LocalDateTime.now())) {
-			throw new ServiceException(ResultCode.EXAM_START_TIME_BEFORE_CURRENT_TIME);  //竞赛开始时间不能早于当前时间
+			//竞赛开始时间不能早于当前时间
+			throw new ServiceException(ResultCode.EXAM_START_TIME_BEFORE_CURRENT_TIME);
 		}
 		if (examSaveDTO.getStartTime().isAfter(examSaveDTO.getEndTime())) {
 			throw new ServiceException(ResultCode.EXAM_START_TIME_AFTER_END_TIME);
 		}
+	}
 }
