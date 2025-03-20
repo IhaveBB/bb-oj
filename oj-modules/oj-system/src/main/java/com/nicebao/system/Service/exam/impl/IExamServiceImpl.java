@@ -11,10 +11,13 @@ import com.nicebao.system.Service.exam.IExamService;
 import com.nicebao.system.domain.exam.Exam;
 import com.nicebao.system.domain.exam.ExamQuestion;
 import com.nicebao.system.domain.exam.dto.ExamAddDTO;
+import com.nicebao.system.domain.exam.dto.ExamEditDTO;
 import com.nicebao.system.domain.exam.dto.ExamQueryDTO;
 import com.nicebao.system.domain.exam.dto.ExamQuestAddDTO;
+import com.nicebao.system.domain.exam.vo.ExamDetailVO;
 import com.nicebao.system.domain.exam.vo.ExamVO;
 import com.nicebao.system.domain.question.Question;
+import com.nicebao.system.domain.question.vo.QuestionVO;
 import com.nicebao.system.mapper.exam.ExamMapper;
 import com.nicebao.system.mapper.exam.ExamQuestionMapper;
 import com.nicebao.system.mapper.question.QuestionMapper;
@@ -90,6 +93,51 @@ public class IExamServiceImpl implements IExamService {
 				.eq(ExamQuestion::getQuestionId, questionId));
 	}
 
+	@Override
+	public ExamDetailVO detail(Long examId) {
+		ExamDetailVO examDetailVO = new ExamDetailVO();
+		Exam exam = getExam(examId);
+		BeanUtil.copyProperties(exam, examDetailVO);
+		List<QuestionVO> questionVOList = examQuestionMapper.selectExamQuestionList(examId);
+		//如果竞赛里没题目，直接返回
+		if (CollectionUtil.isEmpty(questionVOList)) {
+			return examDetailVO;
+		}
+		//插入竞赛中的题目
+		examDetailVO.setExamQuestionList(questionVOList);
+		return examDetailVO;
+	}
+
+	@Override
+	public int edit(ExamEditDTO examEditDTO) {
+		Exam exam = getExam(examEditDTO.getExamId());
+		if (Constants.TRUE.equals(exam.getStatus())) {
+			throw new ServiceException(ResultCode.EXAM_IS_PUBLISH);
+		}
+		//检查一下准备修改的竞赛是否已经开始。
+		checkExam(exam);
+		//校验用户要输入的数据是否合法？
+		checkExamSaveParams(examEditDTO, examEditDTO.getExamId());
+		exam.setTitle(examEditDTO.getTitle());
+		exam.setStartTime(examEditDTO.getStartTime());
+		exam.setEndTime(examEditDTO.getEndTime());
+		return examMapper.updateById(exam);
+	}
+
+	@Override
+	public int delete(Long examId) {
+		Exam exam = getExam(examId);
+		if (Constants.TRUE.equals(exam.getStatus())) {
+			throw new ServiceException(ResultCode.EXAM_IS_PUBLISH);
+		}
+		checkExam(exam);
+		examQuestionMapper.delete(new LambdaQueryWrapper<ExamQuestion>()
+				.eq(ExamQuestion::getExamId, examId));
+		return examMapper.deleteById(exam);
+	}
+
+
+
 	/**
 	 * 保存题目到竞赛
 	 * @author IhavBB
@@ -139,6 +187,13 @@ public class IExamServiceImpl implements IExamService {
 		return exam;
 	}
 
+	/**
+	 * 竞赛保存时参数校验
+	 * @author IhavBB
+	 * @date 23:44 2025/3/20
+	 * @param examSaveDTO
+	 * @param examId
+	**/
 	private void checkExamSaveParams(ExamAddDTO examSaveDTO, Long examId) {
 		//1、竞赛标题是否重复进行判断   2、竞赛开始、结束时间进行判断
 		List<Exam> examList = examMapper
