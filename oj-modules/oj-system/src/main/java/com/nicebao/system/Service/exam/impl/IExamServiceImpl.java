@@ -136,6 +136,37 @@ public class IExamServiceImpl implements IExamService {
 		return examMapper.deleteById(exam);
 	}
 
+	@Override
+	public int publish(Long examId) {
+		Exam exam = getExam(examId);
+		//select count(0) from tb_exam_question where exam_id = #{examId}
+		if (exam.getEndTime().isBefore(LocalDateTime.now())) {
+			throw new ServiceException(ResultCode.EXAM_IS_FINISH);
+		}
+		//判断竞赛里有没有题目，没有题目不可发布
+		Long count = examQuestionMapper
+				.selectCount(new LambdaQueryWrapper<ExamQuestion>().eq(ExamQuestion::getExamId, examId));
+		if (count == null || count <= 0) {
+			throw new ServiceException(ResultCode.EXAM_NOT_HAS_QUESTION);
+		}
+
+		exam.setStatus(Constants.TRUE);
+		//要将新发布的竞赛数据存储到redis   e:t:l  e:d:examId
+		//todo 后续存储到Redis中
+		return examMapper.updateById(exam);
+	}
+
+	@Override
+	public int cancelPublish(Long examId) {
+		Exam exam = getExam(examId);
+		checkExam(exam);
+		if (exam.getEndTime().isBefore(LocalDateTime.now())) {
+			throw new ServiceException(ResultCode.EXAM_IS_FINISH);
+		}
+		exam.setStatus(Constants.FALSE);
+		//todo 后续删除redis中的缓存
+		return examMapper.updateById(exam);
+	}
 
 
 	/**

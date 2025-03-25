@@ -33,4 +33,6 @@ public interface IExamService {
 
 	int publish(Long examId);
 
+	int cancelPublish(Long examId);
+
 }
