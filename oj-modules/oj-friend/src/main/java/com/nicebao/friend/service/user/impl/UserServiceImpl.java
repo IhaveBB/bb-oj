@@ -12,12 +12,16 @@ import com.nicebao.common.core.domain.vo.LoginUserVO;
 import com.nicebao.common.core.enums.ResultCode;
 import com.nicebao.common.core.enums.UserIdentity;
 import com.nicebao.common.core.enums.UserStatus;
+import com.nicebao.common.core.utils.ThreadLocalUtil;
 import com.nicebao.common.message.service.AliSmsService;
 import com.nicebao.common.redis.service.RedisService;
 import com.nicebao.common.security.exception.ServiceException;
 import com.nicebao.common.security.service.TokenService;
 import com.nicebao.friend.domain.user.User;
 import com.nicebao.friend.domain.user.dto.UserDTO;
+import com.nicebao.friend.domain.user.dto.UserUpdateDTO;
+import com.nicebao.friend.domain.user.vo.UserVO;
+import com.nicebao.friend.manager.UserCacheManager;
 import com.nicebao.friend.mapper.user.UserMapper;
 import com.nicebao.friend.service.user.IUserService;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +51,8 @@ public class UserServiceImpl implements IUserService {
 	private UserMapper userMapper;
 	@Autowired
 	private TokenService tokenService;
+	@Autowired
+	private UserCacheManager userCacheManager;
 	@Value("${jwt.secret}")
 	private String secret;
 	//验证码过期时间
@@ -141,6 +147,65 @@ public class UserServiceImpl implements IUserService {
 			loginUserVO.setHeadImage(downloadUrl + loginUser.getHeadImage());
 		}
 		return R.ok(loginUserVO);
+	}
+
+	@Override
+	public UserVO detail() {
+		Long userId = ThreadLocalUtil.get(Constants.USER_ID, Long.class);
+		if (userId == null) {
+			throw new ServiceException(ResultCode.FAILED_USER_NOT_EXISTS);
+		}
+		UserVO userVO = userCacheManager.getUserById(userId);
+		if (userVO == null) {
+			throw new ServiceException(ResultCode.FAILED_USER_NOT_EXISTS);
+		}
+		if (StrUtil.isNotEmpty(userVO.getHeadImage())) {
+			userVO.setHeadImage(downloadUrl + userVO.getHeadImage());
+		}
+		return userVO;
+	}
+
+	@Override
+	public int edit(UserUpdateDTO userUpdateDTO) {
+		Long userId = ThreadLocalUtil.get(Constants.USER_ID, Long.class);
+		if (userId == null) {
+			throw new ServiceException(ResultCode.FAILED_USER_NOT_EXISTS);
+		}
+		User user = userMapper.selectById(userId);
+		if (user == null) {
+			throw new ServiceException(ResultCode.FAILED_USER_NOT_EXISTS);
+		}
+		user.setNickName(userUpdateDTO.getNickName());
+		user.setSex(userUpdateDTO.getSex());
+		user.setSchoolName(userUpdateDTO.getSchoolName());
+		user.setMajorName(userUpdateDTO.getMajorName());
+		user.setPhone(userUpdateDTO.getPhone());
+		user.setEmail(userUpdateDTO.getEmail());
+		user.setWechat(userUpdateDTO.getWechat());
+		user.setIntroduce(userUpdateDTO.getIntroduce());
+		//更新用户缓存
+		userCacheManager.refreshUser(user);
+		tokenService.refreshLoginUser(user.getNickName(),user.getHeadImage(),
+				ThreadLocalUtil.get(Constants.USER_KEY, String.class));
+		return userMapper.updateById(user);
+	}
+
+	@Override
+	public int updateHeadImage(String headImage) {
+		Long userId = ThreadLocalUtil.get(Constants.USER_ID, Long.class);
+		if (userId == null) {
+			throw new ServiceException(ResultCode.FAILED_USER_NOT_EXISTS);
+		}
+		User user = userMapper.selectById(userId);
+		if (user == null) {
+			throw new ServiceException(ResultCode.FAILED_USER_NOT_EXISTS);
+		}
+		user.setHeadImage(headImage);
+		//更新用户缓存
+		userCacheManager.refreshUser(user);
+		tokenService.refreshLoginUser(user.getNickName(),user.getHeadImage(),
+				ThreadLocalUtil.get(Constants.USER_KEY, String.class));
+		return userMapper.updateById(user);
 	}
 
 
