@@ -1,4 +1,4 @@
-package com.nicebao.friend.domain;
+package com.nicebao.friend.domain.user;
 
 
 import com.baomidou.mybatisplus.annotation.IdType;

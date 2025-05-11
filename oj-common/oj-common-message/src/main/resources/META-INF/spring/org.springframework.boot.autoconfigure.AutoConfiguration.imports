@@ -1,2 +1,2 @@
-com.bite.common.message.service.AliSmsService
-com.bite.common.message.config.AliSmsConfig
+com.nicebao.common.message.service.AliSmsService
+com.nicebao.common.message.config.AliSmsConfig

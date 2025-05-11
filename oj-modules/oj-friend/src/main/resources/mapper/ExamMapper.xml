@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.bite.friend.mapper.exam.ExamMapper">
+<mapper namespace="com.nicebao.friend.mapper.exam.ExamMapper">
 
-    <select id="selectExamList" resultType="com.bite.friend.domain.exam.vo.ExamVO">
+    <select id="selectExamList" resultType="com.nicebao.friend.domain.exam.vo.ExamVO">
         SELECT
             te.exam_id,
             te.title,

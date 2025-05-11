@@ -1,0 +1,3 @@
+com.nicebao.common.file.config.OSSConfig
+com.nicebao.common.file.service.OSSService
+com.nicebao.common.file.config.OSSProperties

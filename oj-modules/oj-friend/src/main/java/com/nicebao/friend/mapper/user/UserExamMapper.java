@@ -2,7 +2,7 @@ package com.nicebao.friend.mapper.user;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.nicebao.friend.domain.UserExam;
+import com.nicebao.friend.domain.user.UserExam;
 import com.nicebao.friend.domain.exam.vo.ExamRankVO;
 import com.nicebao.friend.domain.exam.vo.ExamVO;
 

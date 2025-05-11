@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.bite.system.mapper.question.QuestionMapper">
+<mapper namespace="com.nicebao.system.mapper.question.QuestionMapper">
 
-    <select id="selectQuestionList" resultType="com.bite.system.domain.question.vo.QuestionVO">
+    <select id="selectQuestionList" resultType="com.nicebao.system.domain.question.vo.QuestionVO">
         SELECT
             tq.question_id,
             tq.title,

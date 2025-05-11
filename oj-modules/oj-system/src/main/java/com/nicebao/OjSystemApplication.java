@@ -12,7 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @date 2025/2/18
  */
 @SpringBootApplication
-@MapperScan("com.nicebao.system.mapper")
+@MapperScan("com.nicebao.**.mapper")
 public class OjSystemApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(OjSystemApplication.class, args);

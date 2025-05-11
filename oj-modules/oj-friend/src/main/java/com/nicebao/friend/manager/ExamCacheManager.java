@@ -11,7 +11,7 @@ import com.nicebao.common.core.enums.ExamListType;
 import com.nicebao.common.core.enums.ResultCode;
 import com.nicebao.common.redis.service.RedisService;
 import com.nicebao.common.security.exception.ServiceException;
-import com.nicebao.friend.domain.UserExam;
+import com.nicebao.friend.domain.user.UserExam;
 import com.nicebao.friend.domain.exam.Exam;
 import com.nicebao.friend.domain.exam.ExamQuestion;
 import com.nicebao.friend.domain.exam.dto.ExamQueryDTO;

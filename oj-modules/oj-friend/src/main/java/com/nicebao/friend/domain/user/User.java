@@ -3,7 +3,7 @@ package com.nicebao.friend.domain.user;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.bite.common.core.domain.BaseEntity;
+import com.nicebao.common.core.domain.BaseEntity;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.nicebao.common.core.domain.BaseEntity;

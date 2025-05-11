@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
 	private UserMapper userMapper;
 
 	@Override
-	public List<UserVO> list(UserQueryDTO userQueryDTO) {
+	public List<UserVO> 	list(UserQueryDTO userQueryDTO) {
 		PageHelper.startPage(userQueryDTO.getPageNum(), userQueryDTO.getPageSize());
 		return userMapper.selectUserList(userQueryDTO);
 	}
